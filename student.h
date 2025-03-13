@@ -9,6 +9,8 @@ typedef struct {
 	double gpa; //0 if not calculated
 } Student;
 
+Student * studentConstruct(int ID, const char * name);
+void studentDestruct(Student *s);
 void displayStudent(Student * s);
 int addGrade(Student * s, double grade);
 

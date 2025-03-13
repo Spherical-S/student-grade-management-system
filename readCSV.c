@@ -30,12 +30,7 @@ int csvFileWrite(Student *s) {
 }	
 
 
-int csvFileRead(Student *s) {
-	FILE *file = fopen("StudentData.csv", "r");
-	if (file == NULL) {
-		printf("Error: could not open file\n");
-		return 1;
-	}
+int csvFileRead(FILE * file, Student *s) {
 
 	fscanf(file, "%d,%100[^,],%f,", &s->ID, s->name, &s->gpa);
 	

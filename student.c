@@ -3,6 +3,21 @@
 #include <string.h>
 #include "student.h"
 
+Student * studentConstruct(int ID, const char * name){
+	Student * s = malloc(sizeof(Student));
+	s->ID = ID;
+	s->name = name;
+	return s;
+}
+
+
+void studentDestruct(Student *s){
+	free(s->name);
+	free(s->grades);
+	free(s);
+}
+
+
 void displayStudent(Student * s){
 	printf("------- Student Information -------\n");
 	printf("ID: %d\nName: %s\nGPA: %f\n", s->ID, s->name, s->gpa);
