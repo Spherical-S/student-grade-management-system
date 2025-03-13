@@ -3,6 +3,8 @@
 #include <string.h>
 #include "student.h"
 
+//TODO: WRITE ALL STUDENTS TO FILE FUNCTION
+
 int appendStudentToCSV(Student *s) {
 	
     FILE *file = fopen("StudentData.csv", "a");
