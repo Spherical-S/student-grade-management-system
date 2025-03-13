@@ -3,8 +3,8 @@ CFLAGS = -g -Wall -Wshadow
 VALGRIND = valgrind --tool=memcheck --leak-check=full
 VALGRIND += --verbose --log-file=vallog
 
-OBJS = #insert c files here
-HDRS = #insert header files here
+OBJS = main.o student.o readCSV.o
+HDRS = student.h myheader.h
 TARGET = prog1
 
 all: $(TARGET)

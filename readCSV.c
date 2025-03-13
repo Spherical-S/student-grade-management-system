@@ -3,23 +3,37 @@
 #include <string.h>
 #include "student.h"
 
-int csvFileWrite(Student *s) {
+int appendStudentToCSV(Student *s) {
 	
-    FILE *file = fopen("StudentData.csv", "w");
+    FILE *file = fopen("StudentData.csv", "a");
 	
     if (file == NULL) {
         printf("Error: could not open file\n");
         return 1;
     }
 
-    //FORMAT: ID,Name,GPA,Grade1,Grade2,...,GradeN
-    fprintf(file, "%d,%s,", s->ID, s->name);
+	char first[50];
+	char last[50];
+
+	//Split the name into first and last name
+	char *token = strtok(s->name, " ");
+    if (token != NULL) {
+        strcpy(first, token);
+
+        token = strtok(NULL, " ");
+        if (token != NULL) {
+            strcpy(last, token);
+        }
+    }
+
+    //FORMAT: ID,FirstName,LastName,GPA,Grade1,Grade2,...,GradeN
+    fprintf(file, "%d,%s,%s", s->ID, first, last);
 	
 	fprintf(file, "%.2f,", s->gpa);
 	
 	for (int i = 0; i < s->numGrades; i++) {
-		if(i == s->numGrades-1){ //ensure last grade doesnt print a comma at the end
-			fprintf(file, "%.2f", s->grades[i]);
+		if(i == s->numGrades-1){ //ensure new line is created at the end
+			fprintf(file, "%.2f\n", s->grades[i]);
 		}else{
 			fprintf(file, "%.2f,", s->grades[i]);
 		}
@@ -30,19 +44,30 @@ int csvFileWrite(Student *s) {
 }	
 
 
-int csvFileRead(FILE * file, Student *s) {
+Student * createStudentFromCSVLine(FILE * file) {
 
-	fscanf(file, "%d,%100[^,],%f,", &s->ID, s->name, &s->gpa);
-	
+	char first[50];
+	char last[50];
+	int ID;
+
+	fscanf(file, "%d,%100[^,],%100[^,],", &ID, first, last);
+
+	Student * s = studentConstruct(ID, first, last);
+
+	fscanf(file, "%lf,", &s->gpa);
+
+	char gradesString[1024];
+
+	fgets(gradesString, 1024, file);
+
 	double grade;
-	
-	while(fscanf(file, "%f,", &grade) != -1){
+
+	char * token = strtok(gradesString, ",");
+	while(token != NULL) {
+        grade = strtod(token, NULL);
 		addGrade(s, grade);
-	}
-	//while loop only adds until the second last grade due to no comma after the last grade
-	fscanf(file, "%f\n", &grade);
-	addGrade(s, grade);
+        token = strtok(NULL, ",");
+    }
 	
-	fclose(file);
-	return 0;
+	return s;
 }
