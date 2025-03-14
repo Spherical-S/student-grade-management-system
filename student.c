@@ -65,3 +65,39 @@ int addGrade(Student * s, double grade){
 	return 0;
 
 }
+
+double calculateGPA(Student * s){
+
+	double totalGradePoints = 0;
+
+	for (int i = 0; i<s->numGrades; i++){
+
+		if(s->grades[i] >= 90){
+			totalGradePoints += 4.3; //A+
+		}else if(s->grades[i] >= 85){
+			totalGradePoints += 4.0; //A
+		}else if(s->grades[i] >= 80){
+			totalGradePoints += 3.7; //A-
+		}else if(s->grades[i] >= 77){
+			totalGradePoints += 3.3; //B+
+		}else if(s->grades[i] >= 73){
+			totalGradePoints += 3.0; //B
+		}else if(s->grades[i] >= 70){
+			totalGradePoints += 2.7; //B-
+		}else if(s->grades[i] >= 65){
+			totalGradePoints += 2.3; //C+
+		}else if(s->grades[i] >= 60){
+			totalGradePoints += 2.0; //C
+		}else if(s->grades[i] >= 50){
+			totalGradePoints += 1.0; //D
+		}else{
+			totalGradePoints += 0.0; //F
+		}
+
+	}
+
+	s->gpa = totalGradePoints/s->numGrades;
+
+	return s->gpa;
+
+}

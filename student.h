@@ -14,5 +14,6 @@ void studentDestruct(Student *s);
 void displayStudent(Student * s);
 void printGrades(Student * s);
 int addGrade(Student * s, double grade);
+double calculateGPA(Student * s);
 
 #endif

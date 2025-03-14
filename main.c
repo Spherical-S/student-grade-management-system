@@ -13,6 +13,8 @@ int main(int argc, char * * argv){
         return EXIT_FAILURE;
     }
 
+    Student * * students = malloc(3 * sizeof(Student *));
+
     Student * s1;
     Student * s2;
 
@@ -27,5 +29,15 @@ int main(int argc, char * * argv){
     addGrade(s3, 70.2);
     displayStudent(s3);
     printGrades(s3);
-    appendStudentToCSV(s3);
+    
+    calculateGPA(s1);
+    calculateGPA(s2);
+    calculateGPA(s3);
+
+    students[0] = s1;
+    students[1] = s2;
+    students[2] = s3;
+
+    writeAllStudentsToCSV(students, 3);
+
 }

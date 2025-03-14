@@ -3,16 +3,7 @@
 #include <string.h>
 #include "student.h"
 
-//TODO: WRITE ALL STUDENTS TO FILE FUNCTION
-
-int appendStudentToCSV(Student *s) {
-	
-    FILE *file = fopen("StudentData.csv", "a");
-	
-    if (file == NULL) {
-        printf("Error: could not open file\n");
-        return 1;
-    }
+int addStudentToCSV(FILE * file, Student *s) {
 
 	char first[50];
 	char last[50];
@@ -29,7 +20,7 @@ int appendStudentToCSV(Student *s) {
     }
 
     //FORMAT: ID,FirstName,LastName,GPA,Grade1,Grade2,...,GradeN
-    fprintf(file, "%d,%s,%s", s->ID, first, last);
+    fprintf(file, "%d,%s,%s,", s->ID, first, last);
 	
 	fprintf(file, "%.2f,", s->gpa);
 	
@@ -44,6 +35,27 @@ int appendStudentToCSV(Student *s) {
 	fclose(file);
 	return 0;
 }	
+
+int writeAllStudentsToCSV(Student * * students, int count){
+
+	FILE * file = fopen("StudentData.csv", "w");
+	
+    if (file == NULL) {
+        printf("Error: could not open file\n");
+        return 1;
+    }
+
+	for(int i = 0; i<count; i++){
+		if(addStudentToCSV(file, students[i]) == 1){
+			fclose(file);
+			return 1;
+		}
+	}
+
+	fclose(file);
+	return 0;
+
+}
 
 
 Student * createStudentFromCSVLine(FILE * file) {
