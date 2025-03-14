@@ -32,8 +32,8 @@ int addStudentToCSV(FILE * file, Student *s) {
 		}
 	}
 
-	fclose(file);
 	return 0;
+	
 }	
 
 int writeAllStudentsToCSV(Student * * students, int count){
