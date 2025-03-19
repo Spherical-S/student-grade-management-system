@@ -36,14 +36,7 @@ int addStudentToCSV(FILE * file, Student *s) {
 	
 }	
 
-int writeAllStudentsToCSV(Student * * students, int count){
-
-	FILE * file = fopen("StudentData.csv", "w");
-	
-    if (file == NULL) {
-        printf("Error: could not open file\n");
-        return 1;
-    }
+int writeAllStudentsToCSV(FILE * file, Student * * students, int count){
 
 	for(int i = 0; i<count; i++){
 		if(addStudentToCSV(file, students[i]) == 1){

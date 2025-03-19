@@ -8,7 +8,10 @@ int main(int argc, char * * argv){
 
     if (argc != 0){
 
-        int testNum = strtol(argv[1]);
+        long int testNum;
+        char * endptr;
+
+        testNum = strtol(argv[1], &endptr, 10);
 
         switch(testNum){
             case 0:
@@ -32,6 +35,8 @@ int main(int argc, char * * argv){
             default:
                 printf("Invalid test number\n");
         }
+
+        return EXIT_SUCCESS;
 
     }
 
@@ -84,6 +89,16 @@ int main(int argc, char * * argv){
 
     printBarChart(s1);
 
-    writeAllStudentsToCSV(students, 3);
+    FILE * fptr2 = fopen("StudentData.csv", "w");
+
+    if(fptr2 == NULL){
+        printf("Error opening file.\n");
+        return EXIT_FAILURE;
+    }
+
+    writeAllStudentsToCSV(fptr2, students, 3);
+
+    fclose(fptr);
+    fclose(fptr2);
 
 }

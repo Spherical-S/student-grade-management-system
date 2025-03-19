@@ -18,16 +18,15 @@ $(TARGET): $(OBJS)
 	
 
 test:
-	@for input_file in $(INPUT_DIR)/*; do \
-		output_file=$(OUTPUT_DIR)/$(notdir $(input_file)); \
-		expected_file=$(EXPECTED_DIR)/$(notdir $(input_file)); \
-		echo "Running test for $$input_file"; \
-		./$(TARGET) < $$input_file > $$output_file; \
-		if diff -q $$output_file $$expected_file; then \
-			echo "Test passed for $$input_file"; \
+	@for file in $(INPUT_DIR)/; do \
+		echo "Running test for $$file"; \
+		./$(TARGET) < $$file > $(OUTPUT_DIR)/$$file; \
+		diff $$file $(EXPECTED_DIR)/$$file; \
+		if [ $$? -ne 0 ]; then \
+			echo "Test failed for $$file"; \
 		else \
-			echo "Test failed for $$input_file"; \
-		fi; \
+			echo "Test passed for $$file"; \
+		fi \
 	done
 
 memory: $(VALGRIND) ./$(TARGET)
