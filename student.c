@@ -47,6 +47,19 @@ void printGrades(Student * s){
 	printf("\n");
 }
 
+void printBarChart(Student * s){
+	printf("Grade visualization for %s, Student No. %d\n", s->name, s->ID);
+ 	for (int i = 0; i<s->numGrades; i++) {
+ 		printf("Course #%d | ", i);
+ 		
+ 		int numOfHash = s->grades[i] / 10;
+ 		for (int j = 0; j < numOfHash; j++) {
+ 			printf("#");
+ 		}
+ 		printf(" | (%.2f)\n", s->grades[i]);
+ 	}
+	printf("Total GPA: %.2f\n", s->gpa);
+ }
 
 int addGrade(Student * s, double grade){
 	
@@ -109,37 +122,44 @@ Student * * merge(Student * * left, int leftCount, Student * * right, int rightC
 	Student * * result = malloc((leftCount + rightCount) * sizeof(Student *));
 	int i = 0;
 	int j = 0;
+	int k = 0;
 
 	while(i < leftCount && j < rightCount){
 
 		if (sortType == 0){ //gpa
 
 			if (left[i]->gpa >= right[j]->gpa){
-				result[i+j] = left[i];
+				result[k] = left[i];
 				i++;
+				k++;
 			}else{
-				result[i+j] = right[j];
+				result[k] = right[j];
 				j++;
+				k++;
 			}
 
 		}else if(sortType == 1){ //ID
 
 			if (left[i]->ID <= right[j]->ID){
-				result[i+j] = left[i];
+				result[k] = left[i];
 				i++;
+				k++;
 			}else{
-				result[i+j] = right[j];
+				result[k] = right[j];
 				j++;
+				k++;
 			}
 
 		}else{ //Name
 
 			if (strcmp(left[i]->name, right[j]->name) <= 0){
-				result[i+j] = left[i];
+				result[k] = left[i];
 				i++;
+				k++;
 			}else{
-				result[i+j] = right[j];
+				result[k] = right[j];
 				j++;
+				k++;
 			}
 
 		}
@@ -148,15 +168,17 @@ Student * * merge(Student * * left, int leftCount, Student * * right, int rightC
 
 	while(i < leftCount){
 
-		result[i+j] = left[i];
+		result[k] = left[i];
 		i++;
+		k++;
 
 	}
 
 	while(j < rightCount){
 
-		result[i+j] = right[j];
+		result[k] = right[j];
 		j++;
+		k++;
 
 	}
 
@@ -183,10 +205,13 @@ Student * * merge_sort(Student * * students, int count, int sortType){ //sortTyp
 	}
 
 	for (int i = leftCount; i<count; i++){
-		right[i] = students[i];
+		right[i-leftCount] = students[i];
 	}
 
-	Student * * merged = mergeGPA(left, leftCount, right, rightCount, sortType);
+	left = merge_sort(left, leftCount, sortType);
+	right = merge_sort(right, rightCount, sortType);
+
+	Student * * merged = merge(left, leftCount, right, rightCount, sortType);
 
 	free(left);
 	free(right);
@@ -196,19 +221,19 @@ Student * * merge_sort(Student * * students, int count, int sortType){ //sortTyp
 }
 
 Student * * sortByGPA(Student * * students, int count){
-
-	return merge_sort(students, count, 0)
+	
+	return merge_sort(students, count, 0);
 
 }
 
 Student * * sortByID(Student * * students, int count){
-
-	return merge_sort(students, count, 1)
+	
+	return merge_sort(students, count, 1);
 
 }
 
 Student * * sortByName(Student * * students, int count){
-
-	return merge_sort(students, count, 2)
+	
+	return merge_sort(students, count, 2);
 
 }

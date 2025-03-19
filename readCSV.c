@@ -82,6 +82,8 @@ Student * createStudentFromCSVLine(FILE * file) {
 		addGrade(s, grade);
         token = strtok(NULL, ",");
     }
+
+	calculateGPA(s);
 	
 	return s;
 }
