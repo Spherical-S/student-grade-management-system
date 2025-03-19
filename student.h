@@ -15,5 +15,6 @@ void displayStudent(Student * s);
 void printGrades(Student * s);
 int addGrade(Student * s, double grade);
 double calculateGPA(Student * s);
+Student * * sortByGPA(Student * * students);
 
 #endif

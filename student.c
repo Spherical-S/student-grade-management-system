@@ -61,6 +61,8 @@ int addGrade(Student * s, double grade){
 	}
 	s->grades[s->numGrades] = grade;
 	s->numGrades++;
+
+	calculateGPA(s);
 	
 	return 0;
 
