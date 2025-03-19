@@ -13,6 +13,7 @@ Student * studentConstruct(int ID, const char * first, const char * last);
 void studentDestruct(Student *s);
 void displayStudent(Student * s);
 void printGrades(Student * s);
+void printBarChart(Student * s);
 int addGrade(Student * s, double grade);
 double calculateGPA(Student * s);
 Student * * sortByGPA(Student * * students, int count);
