@@ -6,6 +6,35 @@
 
 int main(int argc, char * * argv){
 
+    if (argc != 0){
+
+        int testNum = strtol(argv[1]);
+
+        switch(testNum){
+            case 0:
+                testReadCSV();
+                break;
+            case 1:
+                testWriteCSV();
+                break;
+            case 2:
+                testCalculateGPA();
+                break;
+            case 3:
+                testSortByName();
+                break;
+            case 4:
+                testSortByID();
+                break;
+            case 5:
+                testSortByGPA();
+                break;
+            default:
+                printf("Invalid test number\n");
+        }
+
+    }
+
     FILE * fptr = fopen("StudentData.csv", "r");
 
     if(fptr == NULL){
