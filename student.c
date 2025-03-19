@@ -47,6 +47,17 @@ void printGrades(Student * s){
 	printf("\n");
 }
 
+void printBarChart(Student * s){
+	for (int i = 0; i<s->numGrades; i++) {
+		printf("Subject %d | ", i);
+		
+		int numOfHash = s->grades[i] / 10;
+		for (int j = 0; j < numOfHash; j++) {
+			printf("#");
+		}
+		printf(" | (%.2f)\n", s->grades[i]);
+	}
+}
 
 int addGrade(Student * s, double grade){
 	
