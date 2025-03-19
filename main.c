@@ -6,12 +6,16 @@
 
 int main(int argc, char * * argv){
 
-    if (argc != 0){
+    if (argc != 0){ //If there is a command line argument, it is for running unit tests
 
         long int testNum;
         char * endptr;
 
         testNum = strtol(argv[1], &endptr, 10);
+
+        if(*endptr != '\0'){
+            testNum = -1;
+        }
 
         switch(testNum){
             case 0:
