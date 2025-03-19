@@ -7,7 +7,6 @@ OBJS = main.o student.o readCSV.o unitTests.o
 HDRS = student.h myheader.h
 TARGET = prog1
 
-INPUT_DIR = input
 EXPECTED_DIR = expected
 OUTPUT_DIR = output
 
@@ -18,15 +17,14 @@ $(TARGET): $(OBJS)
 	
 
 test:
-	@for file in $(INPUT_DIR)/; do \
-		echo "Running test for $$file"; \
-		./$(TARGET) < $$file > $(OUTPUT_DIR)/$$file; \
-		diff $$file $(EXPECTED_DIR)/$$file; \
-		if [ $$? -ne 0 ]; then \
-			echo "Test failed for $$file"; \
+	@for i in $(shell seq 0 5); do \
+		echo Running test: $$i; \
+		./$(TARGET) $$i > $(OUTPUT_DIR)/test$$i; \
+		if diff -b $(EXPECTED_DIR)/test$$i $(OUTPUT_DIR)/test$$i; then \
+			echo "Test $$i PASSED"; \
 		else \
-			echo "Test passed for $$file"; \
-		fi \
+			echo "Test $$i FAILED"; \
+		fi; \
 	done
 
 memory: $(VALGRIND) ./$(TARGET)
