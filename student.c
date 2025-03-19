@@ -103,3 +103,112 @@ double calculateGPA(Student * s){
 	return s->gpa;
 
 }
+
+Student * * merge(Student * * left, int leftCount, Student * * right, int rightCount, int sortType){
+
+	Student * * result = malloc((leftCount + rightCount) * sizeof(Student *));
+	int i = 0;
+	int j = 0;
+
+	while(i < leftCount && j < rightCount){
+
+		if (sortType == 0){ //gpa
+
+			if (left[i]->gpa >= right[j]->gpa){
+				result[i+j] = left[i];
+				i++;
+			}else{
+				result[i+j] = right[j];
+				j++;
+			}
+
+		}else if(sortType == 1){ //ID
+
+			if (left[i]->ID <= right[j]->ID){
+				result[i+j] = left[i];
+				i++;
+			}else{
+				result[i+j] = right[j];
+				j++;
+			}
+
+		}else{ //Name
+
+			if (strcmp(left[i]->name, right[j]->name) <= 0){
+				result[i+j] = left[i];
+				i++;
+			}else{
+				result[i+j] = right[j];
+				j++;
+			}
+
+		}
+
+	}
+
+	while(i < leftCount){
+
+		result[i+j] = left[i];
+		i++;
+
+	}
+
+	while(j < rightCount){
+
+		result[i+j] = right[j];
+		j++;
+
+	}
+
+	return result;
+
+}
+
+Student * * merge_sort(Student * * students, int count, int sortType){ //sortType 0 = sort by GPA, 1 = sort by ID, 2 = sort by name
+
+	if (count <= 1){
+		return students;
+	}
+
+	int middle = count/2;
+
+	int leftCount = middle;
+	Student * * left = malloc(leftCount * sizeof(Student *));
+	
+	int rightCount = count-middle;
+	Student * * right = malloc(rightCount * sizeof(Student *));
+
+	for (int i = 0; i<leftCount; i++){
+		left[i] = students[i];
+	}
+
+	for (int i = leftCount; i<count; i++){
+		right[i] = students[i];
+	}
+
+	Student * * merged = mergeGPA(left, leftCount, right, rightCount, sortType);
+
+	free(left);
+	free(right);
+	
+	return merged;
+
+}
+
+Student * * sortByGPA(Student * * students, int count){
+
+	return merge_sort(students, count, 0)
+
+}
+
+Student * * sortByID(Student * * students, int count){
+
+	return merge_sort(students, count, 1)
+
+}
+
+Student * * sortByName(Student * * students, int count){
+
+	return merge_sort(students, count, 2)
+
+}
