@@ -3,7 +3,7 @@
 #include <string.h>
 #include "student.h"
 
-int addStudentToCSV(FILE * file, Student *s) {
+int addStudentToCSV(FILE * file, Student *s, int lastStudent) {
 
 	char first[50];
 	char last[50];
@@ -23,12 +23,21 @@ int addStudentToCSV(FILE * file, Student *s) {
     fprintf(file, "%d,%s,%s,", s->ID, first, last);
 	
 	fprintf(file, "%.2f,", s->gpa);
+
+	if(s->numGrades == 0 && lastStudent == 0){ //ensure a new line is still printed if the student has no grades
+		fprintf(file, "\n");
+	}
 	
 	for (int i = 0; i < s->numGrades; i++) {
-		if(i == s->numGrades-1){ //ensure new line is created at the end
+		if(i == s->numGrades-1 && lastStudent == 0){ //ensure new line is created at the end except if its the last student
 			fprintf(file, "%.2f\n", s->grades[i]);
 		}else{
-			fprintf(file, "%.2f,", s->grades[i]);
+			if(lastStudent == 1){
+				fprintf(file, "%.2f", s->grades[i]);
+			}else{
+				fprintf(file, "%.2f,", s->grades[i]);
+			}
+			
 		}
 	}
 
@@ -38,8 +47,15 @@ int addStudentToCSV(FILE * file, Student *s) {
 
 int writeAllStudentsToCSV(FILE * file, Student * * students, int count){
 
+	int lastStudent = 0;
+
 	for(int i = 0; i<count; i++){
-		if(addStudentToCSV(file, students[i]) == 1){
+
+		if(i == count-1){
+			lastStudent = 1;
+		}
+
+		if(addStudentToCSV(file, students[i], lastStudent) == 1){
 			fclose(file);
 			return 1;
 		}
@@ -63,6 +79,11 @@ Student * createStudentFromCSVLine(FILE * file) {
 
 	fscanf(file, "%lf,", &s->gpa);
 
+	if(feof(file)){
+		calculateGPA(s);
+		return s;
+	}
+
 	char gradesString[1024];
 
 	fgets(gradesString, 1024, file);
@@ -79,4 +100,30 @@ Student * createStudentFromCSVLine(FILE * file) {
 	calculateGPA(s);
 	
 	return s;
+}
+
+Student * * readAllStudentsFromCSV(int * count) {
+
+    FILE * fptr = fopen("StudentData.csv", "r");
+
+    if (fptr == NULL) {
+        printf("Error opening file.\n");
+        return NULL;
+    }
+
+    Student * * students = malloc(0);
+    *count = 0;
+
+    while (!feof(fptr)) {
+
+        Student * newStudent = createStudentFromCSVLine(fptr);
+
+        students = realloc(students, (*count + 1) * sizeof(Student *));
+        students[*count] = newStudent;
+        *count = *count + 1;
+
+    }
+
+    fclose(fptr);
+    return students;
 }

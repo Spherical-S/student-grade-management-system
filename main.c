@@ -44,15 +44,14 @@ int main(int argc, char * * argv){
 
     }
 
-    FILE * fptr = fopen("StudentData.csv", "r");
+    int numStudents = 0;
+    Student * * students = readAllStudentsFromCSV(&numStudents);
 
-    if(fptr == NULL){
-        printf("Error opening file.\n");
-        return EXIT_FAILURE;
-    }
+    displayStudent(students[2]);
+    printGrades(students[2]);
 
     int choice;
-    Student * * sortedStudents = NULL;
+    Student * * sortedStudents;
     
     while (1) {
         printf("How do you want to sort the students?\n");
@@ -71,53 +70,16 @@ int main(int argc, char * * argv){
 
     switch (choice) {
         case 1:
-            sortedStudents = sortByGPA(students, 3);
+            sortedStudents = sortByGPA(students, numStudents);
             printf("Students sorted by GPA:\n");
             break;
         case 2:
-            sortedStudents = sortByID(students, 3);
+            sortedStudents = sortByID(students, numStudents);
             printf("Students sorted by ID:\n");
             break;
         case 3:
-            sortedStudents = sortByName(students, 3);
+            sortedStudents = sortByName(students, numStudents);
             printf("Students sorted by Name:\n");
             break;
     }
-
-    Student * * sortedByGPA = sortByGPA(students, 3);
-    Student * * sortedByID = sortByID(students, 3);
-    Student * * sortedByName = sortByName(students, 3);
-
-    for(int i = 0; i<3; i++){
-        printf("%f ", sortedByGPA[i]->gpa);
-    }
-
-    printf("\n");
-
-    for(int i = 0; i<3; i++){
-        printf("%d ", sortedByID[i]->ID);
-    }
-
-    printf("\n");
-
-    for(int i = 0; i<3; i++){
-        printf("%s ", sortedByName[i]->name);
-    }
-
-    printf("\n");
-
-    printBarChart(s1);
-
-    FILE * fptr2 = fopen("StudentData.csv", "w");
-
-    if(fptr2 == NULL){
-        printf("Error opening file.\n");
-        return EXIT_FAILURE;
-    }
-
-    writeAllStudentsToCSV(fptr2, students, 3);
-
-    fclose(fptr);
-    fclose(fptr2);
-
 }

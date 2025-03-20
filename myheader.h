@@ -4,7 +4,8 @@
 #include <stdio.h>
 
 Student * createStudentFromCSVLine(FILE * file);
-int addStudentToCSV(FILE * file, Student *s);
+Student * * readAllStudentsFromCSV(int * count);
+int addStudentToCSV(FILE * file, Student *s, int lastStudent);
 int writeAllStudentsToCSV(FILE * file, Student * * students, int count);
 void testReadCSV();
 void testWriteCSV();

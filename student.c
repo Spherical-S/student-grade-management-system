@@ -85,6 +85,10 @@ double calculateGPA(Student * s){
 
 	double totalGradePoints = 0;
 
+	if(s->numGrades == 0){
+		return 0;
+	}
+
 	for (int i = 0; i<s->numGrades; i++){
 
 		if(s->grades[i] >= 90){
