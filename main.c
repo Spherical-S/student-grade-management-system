@@ -47,9 +47,6 @@ int main(int argc, char * * argv){
     int numStudents = 0;
     Student * * students = readAllStudentsFromCSV(&numStudents);
 
-    displayStudent(students[2]);
-    printGrades(students[2]);
-
     int choice;
     Student * * sortedStudents;
     
