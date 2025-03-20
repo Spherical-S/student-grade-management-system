@@ -44,6 +44,76 @@ int main(int argc, char * * argv){
 
     }
 
+    int choiceMain;
+    
+    while (1) {
+        printf("Welcome to the Student  Grade Management System\n\n");
+        printf("Click 1 to add a new student.\n");
+        printf("Click 2 to view all student details.\n");
+        printf("Click 3 to search for a specific student.\n");
+        printf("Click 4 to Exit.);
+        printf("Enter your choice (1, 2, 3 or 4): ");
+        scanf("%d", &choiceMain);
+
+        if (choiceMain >= 1 && choiceMain <= 4) {
+            break;
+        } else {
+            printf("Invalid choice! Please try again.\n");
+        }
+    }
+
+    switch (choiceMain) {
+        case 1:
+            int ID;
+                char first[50]
+                char last[50];
+                printf("Enter the student's ID: ");
+                scanf("%d", &ID);
+                printf("Enter the student's first name: ");
+                scanf("%s", first);
+                printf("Enter the student's last name: ");
+                scanf("%s", last);
+
+                Student * addNewStudent = studentConstruct(ID, first, last);
+
+                int numGrades;
+                printf("How many grades does the student have? ");
+                scanf("%d", &numGrades);
+                for (int i = 0; i < numGrades; i++) {
+                    double grade;
+                    printf("Enter grade %d: ", i + 1);
+                    scanf("%lf", &grade);
+                    addGrade(addNewStudent, grade);
+                }
+
+            //in progress
+                FILE * fptr2 = fopen("StudentData.csv", "w");
+                if (fptr2 == NULL) {
+                    printf("Error opening file.\n");
+                    return EXIT_FAILURE;
+                }
+                
+                addStudentToCSV(fptr2, addNewStudent, 1);
+
+                fclose(fptr2);
+                printf("Student added successfully!\n");
+                break;
+            
+        case 2:
+            printf("\nAll Students' Details:\n");
+            //in progress
+                    displayStudent();
+                break;
+        case 3:
+            printf("Student detail: ");
+            break;
+        
+        case 4:
+            printf("Exiting the program.");
+            break;
+    }
+
+
     int numStudents = 0;
     Student * * students = readAllStudentsFromCSV(&numStudents);
 
