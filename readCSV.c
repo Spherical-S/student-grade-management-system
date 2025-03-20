@@ -21,11 +21,15 @@ int addStudentToCSV(FILE * file, Student *s, int lastStudent) {
 
     //FORMAT: ID,FirstName,LastName,GPA,Grade1,Grade2,...,GradeN
     fprintf(file, "%d,%s,%s,", s->ID, first, last);
-	
-	fprintf(file, "%.2f,", s->gpa);
 
-	if(s->numGrades == 0 && lastStudent == 0){ //ensure a new line is still printed if the student has no grades
-		fprintf(file, "\n");
+	if(s->numGrades == 0){ //ensure no comma is printed after gpa if the student has no grades
+		if(lastStudent == 0){
+			fprintf(file, "%.2f\n", s->gpa);
+		}else{
+			fprintf(file, "%.2f", s->gpa);
+		}
+	}else{
+		fprintf(file, "%.2f,", s->gpa);
 	}
 	
 	for (int i = 0; i < s->numGrades; i++) {
