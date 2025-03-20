@@ -69,6 +69,39 @@ int main(int argc, char * * argv){
     students[1] = s2;
     students[2] = s3;
 
+    int choice;
+    Student * * sortedStudents = NULL;
+    
+    while (1) {
+        printf("How do you want to sort the students?\n");
+        printf("1. By GPA\n");
+        printf("2. By ID\n");
+        printf("3. By Name\n");
+        printf("Enter your choice (1, 2, or 3): ");
+        scanf("%d", &choice);
+
+        if (choice >= 1 && choice <= 3) {
+            break;
+        } else {
+            printf("Invalid choice! Please try again.\n");
+        }
+    }
+
+    switch (choice) {
+        case 1:
+            sortedStudents = sortByGPA(students, 3);
+            printf("Students sorted by GPA:\n");
+            break;
+        case 2:
+            sortedStudents = sortByID(students, 3);
+            printf("Students sorted by ID:\n");
+            break;
+        case 3:
+            sortedStudents = sortByName(students, 3);
+            printf("Students sorted by Name:\n");
+            break;
+    }
+
     Student * * sortedByGPA = sortByGPA(students, 3);
     Student * * sortedByID = sortByID(students, 3);
     Student * * sortedByName = sortByName(students, 3);
