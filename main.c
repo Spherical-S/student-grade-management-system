@@ -6,7 +6,7 @@
 
 int main(int argc, char * * argv){
 
-    if (argc != 0){ //If there is a command line argument, it is for running unit tests
+    if (argc > 1){ //If there is a command line argument, it is for running unit tests
 
         long int testNum;
         char * endptr;
@@ -50,24 +50,6 @@ int main(int argc, char * * argv){
         printf("Error opening file.\n");
         return EXIT_FAILURE;
     }
-
-    Student * * students = malloc(3 * sizeof(Student *));
-
-    Student * s1;
-    Student * s2;
-    Student * s3;
-
-    s1 = createStudentFromCSVLine(fptr);
-    s2 = createStudentFromCSVLine(fptr);
-    s3 = createStudentFromCSVLine(fptr);
-    
-    calculateGPA(s1);
-    calculateGPA(s2);
-    calculateGPA(s3);
-
-    students[0] = s1;
-    students[1] = s2;
-    students[2] = s3;
 
     int choice;
     Student * * sortedStudents = NULL;
