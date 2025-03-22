@@ -43,9 +43,18 @@ int main(int argc, char * * argv){
         return EXIT_SUCCESS;
 
     }
-
-    int choiceMain;
     
+    //menu option 
+    int numStudents = 0;
+    Student * * students = readAllStudentsFromCSV(&numStudents);
+    int studentCapacity = 3;
+
+    if (students == NULL) {
+        printf("Error allocating memory!\n");
+        return EXIT_FAILURE;
+    }
+    
+    int choiceMain; 
     while (1) {
         printf("Welcome to the Student  Grade Management System\n\n");
         printf("Click 1 to add a new student.\n");
@@ -86,14 +95,32 @@ int main(int argc, char * * argv){
                     addGrade(addNewStudent, grade);
                 }
 
-            //in progress
+                if (numStudents >= studentCapacity) {
+                    studentCapacity *= 2;
+                    students = realloc(students, studentCapacity * sizeof(Student *));
+                    if (students == NULL) {
+                        printf("Error reallocating memory!\n");
+                        return EXIT_FAILURE;
+                    }
+                }
+                students[numStudents] = addNewStudent;
+                numStudents++;
+
                 FILE * fptr2 = fopen("StudentData.csv", "w");
                 if (fptr2 == NULL) {
                     printf("Error opening file.\n");
                     return EXIT_FAILURE;
                 }
                 
-                addStudentToCSV(fptr2, addNewStudent, 1);
+                for (int i = 0; i < numStudents; i++) {
+                    int lastStudent;
+                        if (i == numStudents - 1) {
+                            lastStudent = 1;
+                        } else {
+                            lastStudent = 0;
+                        }
+                    addStudentToCSV(fptr2, students[i], lastStudent);
+                }
 
                 fclose(fptr2);
                 printf("Student added successfully!\n");
@@ -101,21 +128,57 @@ int main(int argc, char * * argv){
             
         case 2:
             printf("\nAll Students' Details:\n");
-            //in progress
-                    displayStudent();
-                break;
-        case 3:
-            printf("Student detail: ");
+            for (int i = 0; i < numStudents; i++) {
+                displayStudent(students[i]);
+            }
             break;
+        
+       case 3: {
+            int searchChoice;
+            printf("Search by:\n");
+            printf("1. ID\n");
+            printf("2. Name\n");
+            printf("Enter your choice (1 or 2): ");
+            scanf("%d", &searchChoice);
+        
+            switch (searchChoice) {
+                case 1: { // Search by ID
+                    int searchStudentID;
+                    printf("Enter the student's ID: ");
+                    scanf("%d", &searchStudentID);
+        
+                    int found = 0;
+                    for (int i = 0; i < numStudents; i++) {
+                        if (students[i]->ID == searchStudentID) {
+                            displayStudent(students[i]);
+                            printf("\nGrade Bar Chart:\n");
+                            printBarChart(students[i]);
+                            found = 1;
+                            break;
+                        }
+                    }
+        
+                    if (!found) {
+                        printf("Student not found.\n");
+                    }
+                    break;
+                }
+        
+                case 2: // Search by name
+                   //in progress
+        
+                default:
+                    printf("Invalid choice! Please try again.\n");
+                    break;
+            }
+
+        }
+        break;
         
         case 4:
             printf("Exiting the program.");
             break;
     }
-
-
-    int numStudents = 0;
-    Student * * students = readAllStudentsFromCSV(&numStudents);
 
     int choice;
     Student * * sortedStudents;
