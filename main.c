@@ -165,7 +165,27 @@ int main(int argc, char * * argv){
                 }
         
                 case 2: // Search by name
-                   //in progress
+                    char searchName[100];
+                    printf("Enter the student's name: ");
+                    getchar();
+                    fgets(searchName, 100, stdin);
+                    searchName[strcspn(searchName, "\n")] = '\0';
+        
+                    int found = 0;
+                    for (int i = 0; i < numStudents; i++) {
+                        if (strcmp(students[i]->name, searchName) == 0) {
+                            displayStudent(students[i]);
+                            printf("\nGrade Bar Chart:\n");
+                            printBarChart(students[i]);
+                            found = 1;
+                            break;
+                        }
+                    }
+        
+                    if (!found) {
+                        printf("Student not found.\n");
+                    }
+                    break;
         
                 default:
                     printf("Invalid choice! Please try again.\n");
