@@ -83,8 +83,9 @@ int main(int argc, char * * argv){
                 printf("How many grades does the student have? ");
                 scanf("%d", &numGrades);
 
+                double grade;
+
                 for (int i = 0; i < numGrades; i++) {
-                    double grade;
                     printf("Enter grade %d: ", i + 1);
                     scanf("%lf", &grade);
                     addGrade(addNewStudent, grade);
@@ -177,7 +178,7 @@ int main(int argc, char * * argv){
                         }
 
                         free(searchFullName);
-                        
+
                         break;
             
                     default:
