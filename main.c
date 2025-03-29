@@ -47,34 +47,28 @@ int main(int argc, char * * argv){
     //menu option 
     int numStudents = 0;
     Student * * students = readAllStudentsFromCSV(&numStudents);
-    int studentCapacity = 3;
 
     if (students == NULL) {
         printf("Error allocating memory!\n");
         return EXIT_FAILURE;
     }
     
-    int choiceMain; 
-    while (1) {
-        printf("Welcome to the Student  Grade Management System\n\n");
+    int choiceMain;
+    int exitSelected = 0;
+    while (exitSelected == 0) {
+        printf("Welcome to the Student Grade Management System\n\n");
         printf("Click 1 to add a new student.\n");
         printf("Click 2 to view all student details.\n");
         printf("Click 3 to search for a specific student.\n");
-        printf("Click 4 to Exit.);
-        printf("Enter your choice (1, 2, 3 or 4): ");
+        printf("Click 4 to sort the current list of students\n");
+        printf("Click 5 to Exit.\n");
+        printf("Enter your choice (1, 2, 3, 4 or 5): ");
         scanf("%d", &choiceMain);
 
-        if (choiceMain >= 1 && choiceMain <= 4) {
-            break;
-        } else {
-            printf("Invalid choice! Please try again.\n");
-        }
-    }
-
-    switch (choiceMain) {
-        case 1:
-            int ID;
-                char first[50]
+        switch (choiceMain) {
+            case 1: //Add a new student
+                int ID;
+                char first[50];
                 char last[50];
                 printf("Enter the student's ID: ");
                 scanf("%d", &ID);
@@ -88,6 +82,7 @@ int main(int argc, char * * argv){
                 int numGrades;
                 printf("How many grades does the student have? ");
                 scanf("%d", &numGrades);
+
                 for (int i = 0; i < numGrades; i++) {
                     double grade;
                     printf("Enter grade %d: ", i + 1);
@@ -95,141 +90,145 @@ int main(int argc, char * * argv){
                     addGrade(addNewStudent, grade);
                 }
 
-                if (numStudents >= studentCapacity) {
-                    studentCapacity *= 2;
-                    students = realloc(students, studentCapacity * sizeof(Student *));
-                    if (students == NULL) {
-                        printf("Error reallocating memory!\n");
-                        return EXIT_FAILURE;
-                    }
+                students = realloc(students, (numStudents + 1) * sizeof(Student *));
+
+                if (students == NULL) {
+                    printf("Error reallocating memory!\n");
+                    return EXIT_FAILURE;
                 }
+
                 students[numStudents] = addNewStudent;
                 numStudents++;
 
-                FILE * fptr2 = fopen("StudentData.csv", "w");
-                if (fptr2 == NULL) {
+                FILE * fptr = fopen("StudentData.csv", "w");
+
+                if(fptr == NULL){
                     printf("Error opening file.\n");
                     return EXIT_FAILURE;
                 }
-                
-                for (int i = 0; i < numStudents; i++) {
-                    int lastStudent;
-                        if (i == numStudents - 1) {
-                            lastStudent = 1;
-                        } else {
-                            lastStudent = 0;
-                        }
-                    addStudentToCSV(fptr2, students[i], lastStudent);
-                }
 
-                fclose(fptr2);
+                writeAllStudentsToCSV(fptr, students, numStudents);
+                
                 printf("Student added successfully!\n");
                 break;
-            
-        case 2:
-            printf("\nAll Students' Details:\n");
-            for (int i = 0; i < numStudents; i++) {
-                displayStudent(students[i]);
-            }
-            break;
-        
-       case 3: {
-            int searchChoice;
-            printf("Search by:\n");
-            printf("1. ID\n");
-            printf("2. Name\n");
-            printf("Enter your choice (1 or 2): ");
-            scanf("%d", &searchChoice);
-        
-            switch (searchChoice) {
-                case 1: { // Search by ID
-                    int searchStudentID;
-                    printf("Enter the student's ID: ");
-                    scanf("%d", &searchStudentID);
-        
-                    int found = 0;
-                    for (int i = 0; i < numStudents; i++) {
-                        if (students[i]->ID == searchStudentID) {
-                            displayStudent(students[i]);
-                            printf("\nGrade Bar Chart:\n");
-                            printBarChart(students[i]);
-                            found = 1;
-                            break;
-                        }
-                    }
-        
-                    if (!found) {
-                        printf("Student not found.\n");
-                    }
-                    break;
+
+            case 2: //display all students
+
+                printf("\nAll Students' Details:\n");
+                for (int i = 0; i < numStudents; i++) {
+                    displayStudent(students[i]);
                 }
-        
-                case 2: // Search by name
-                    char searchName[100];
-                    printf("Enter the student's name: ");
-                    getchar();
-                    fgets(searchName, 100, stdin);
-                    searchName[strcspn(searchName, "\n")] = '\0';
-        
-                    int found = 0;
-                    for (int i = 0; i < numStudents; i++) {
-                        if (strcmp(students[i]->name, searchName) == 0) {
-                            displayStudent(students[i]);
-                            printf("\nGrade Bar Chart:\n");
-                            printBarChart(students[i]);
-                            found = 1;
-                            break;
+                break;
+            
+            case 3: //search for a specific student
+
+                int searchChoice;
+                printf("Search by:\n");
+                printf("1. ID\n");
+                printf("2. Name\n");
+                printf("Enter your choice (1 or 2): ");
+                scanf("%d", &searchChoice);
+
+                int found = 0;
+            
+                switch (searchChoice) {
+                    case 1: // Search by ID
+                        int searchStudentID;
+                        printf("Enter the student's ID: ");
+                        scanf("%d", &searchStudentID);
+            
+                        for (int i = 0; i < numStudents; i++) {
+                            if (students[i]->ID == searchStudentID) {
+                                displayStudent(students[i]);
+                                printf("\nGrade Bar Chart:\n");
+                                printBarChart(students[i]);
+                                found = 1;
+                                break;
+                            }
                         }
-                    }
-        
-                    if (!found) {
-                        printf("Student not found.\n");
-                    }
-                    break;
-        
-                default:
-                    printf("Invalid choice! Please try again.\n");
-                    break;
-            }
+            
+                        if (found == 0) {
+                            printf("Student not found.\n");
+                        }
+                        break;
 
+                    case 2: // Search by name
+                        char searchFirst[50];
+                        char searchLast[50];
+                        printf("Enter the student's first name: ");
+                        scanf("%s", searchFirst);
+                        printf("Enter the student's last name: ");
+                        scanf("%s", searchLast);
+
+                        char * searchFullName = joinStrings(searchFirst, searchLast);
+            
+                        for (int i = 0; i < numStudents; i++) {
+                            if (strcmp(students[i]->name, searchFullName) == 0) {
+                                displayStudent(students[i]);
+                                printf("\nGrade Bar Chart:\n");
+                                printBarChart(students[i]);
+                                found = 1;
+                                break;
+                            }
+                        }
+            
+                        if (found == 0) {
+                            printf("Student not found.\n");
+                        }
+
+                        free(searchFullName);
+                        
+                        break;
+            
+                    default:
+                        printf("Invalid choice!\n");
+                }
+                break;
+            case 4: //sort students
+                int choice;
+                Student * * sortedStudents;
+                
+                printf("How do you want to sort the students?\n");
+                printf("1. By GPA\n");
+                printf("2. By ID\n");
+                printf("3. By Name\n");
+                printf("Enter your choice (1, 2, or 3): ");
+                scanf("%d", &choice);
+
+                switch (choice) {
+                    case 1:
+                        sortedStudents = sortByGPA(students, numStudents);
+                        printf("Students sorted by GPA:\n");
+                        break;
+                    case 2:
+                        sortedStudents = sortByID(students, numStudents);
+                        printf("Students sorted by ID:\n");
+                        break;
+                    case 3:
+                        sortedStudents = sortByName(students, numStudents);
+                        printf("Students sorted by Name:\n");
+                        break;
+                    default:
+                        printf("Invalid choice.\n");
+                }
+
+                for(int i = 0; i<numStudents; i++){
+                    displayStudent(sortedStudents[i]);
+                }
+
+                free(sortedStudents);
+
+                break;
+            
+            case 5: //exit program
+
+                printf("Exiting the program.\n");
+                exitSelected = 1;
+                break;
+
+            default:
+                printf("Invalid selection, try again.\n");
         }
-        break;
-        
-        case 4:
-            printf("Exiting the program.");
-            break;
-    }
 
-    int choice;
-    Student * * sortedStudents;
-    
-    while (1) {
-        printf("How do you want to sort the students?\n");
-        printf("1. By GPA\n");
-        printf("2. By ID\n");
-        printf("3. By Name\n");
-        printf("Enter your choice (1, 2, or 3): ");
-        scanf("%d", &choice);
-
-        if (choice >= 1 && choice <= 3) {
-            break;
-        } else {
-            printf("Invalid choice! Please try again.\n");
-        }
-    }
-
-    switch (choice) {
-        case 1:
-            sortedStudents = sortByGPA(students, numStudents);
-            printf("Students sorted by GPA:\n");
-            break;
-        case 2:
-            sortedStudents = sortByID(students, numStudents);
-            printf("Students sorted by ID:\n");
-            break;
-        case 3:
-            sortedStudents = sortByName(students, numStudents);
-            printf("Students sorted by Name:\n");
-            break;
     }
 }

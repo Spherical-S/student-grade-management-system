@@ -22,7 +22,6 @@ Student * studentConstruct(int ID, const char * first, const char * last){
 	s->name = joinStrings(first, last);
 	s->gpa = 0;
 	s->numGrades = 0;
-	s->grades = malloc(0);
 	return s;
 }
 

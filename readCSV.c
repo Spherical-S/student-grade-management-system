@@ -33,16 +33,17 @@ int addStudentToCSV(FILE * file, Student *s, int lastStudent) {
 	}
 	
 	for (int i = 0; i < s->numGrades; i++) {
-		if(i == s->numGrades-1 && lastStudent == 0){ //ensure new line is created at the end except if its the last student
-			fprintf(file, "%.2f\n", s->grades[i]);
-		}else{
+		
+		if(i == s->numGrades-1){
 			if(lastStudent == 1){
 				fprintf(file, "%.2f", s->grades[i]);
 			}else{
-				fprintf(file, "%.2f,", s->grades[i]);
+				fprintf(file, "%.2f\n", s->grades[i]);
 			}
-			
+		}else{
+			fprintf(file, "%.2f,", s->grades[i]);
 		}
+
 	}
 
 	return 0;

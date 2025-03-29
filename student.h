@@ -9,6 +9,7 @@ typedef struct {
 	double gpa; //0 if not calculated
 } Student;
 
+char * joinStrings(const char * s1, const char * s2);
 Student * studentConstruct(int ID, const char * first, const char * last);
 void studentDestruct(Student *s);
 void displayStudent(Student * s);
