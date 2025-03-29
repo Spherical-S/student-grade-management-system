@@ -88,7 +88,14 @@ int main(int argc, char * * argv){
                 for (int i = 0; i < numGrades; i++) {
                     printf("Enter grade %d: ", i + 1);
                     scanf("%lf", &grade);
-                    addGrade(addNewStudent, grade);
+                    if(addGrade(addNewStudent, grade) == 1){
+                        exitSelected = 1;
+                        break;
+                    }
+                }
+
+                if(exitSelected == 1){
+                    break;
                 }
 
                 students = realloc(students, (numStudents + 1) * sizeof(Student *));
@@ -232,4 +239,10 @@ int main(int argc, char * * argv){
         }
 
     }
+
+    for(int i = 0; i<numStudents; i++){
+        studentDestruct(students[i]);
+    }
+    free(students);
+
 }

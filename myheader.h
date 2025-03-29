@@ -5,8 +5,8 @@
 
 Student * createStudentFromCSVLine(FILE * file);
 Student * * readAllStudentsFromCSV(int * count);
-int addStudentToCSV(FILE * file, Student *s, int lastStudent);
-int writeAllStudentsToCSV(FILE * file, Student * * students, int count);
+void addStudentToCSV(FILE * file, Student *s, int lastStudent);
+void writeAllStudentsToCSV(FILE * file, Student * * students, int count);
 void testReadCSV();
 void testWriteCSV();
 void testCalculateGPA();

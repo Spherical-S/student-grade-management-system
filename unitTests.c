@@ -31,6 +31,11 @@ void testReadCSV(){
         printf("%d %s\n", students[i]->ID, students[i]->name);
     }
 
+    studentDestruct(s1);
+    studentDestruct(s2);
+    studentDestruct(s3);
+    free(students);
+
     fclose(fptr);
 }
 
@@ -76,6 +81,10 @@ void testWriteCSV(){
         c = fgetc(fptr2);
     }
 
+    studentDestruct(s1);
+    studentDestruct(s2);
+    free(students);
+
     fclose(fptr2);
     
 }
@@ -106,6 +115,11 @@ void testCalculateGPA(){
     for(int i = 0; i<3; i++){
         printf("%.2f\n", students[i]->gpa);
     }
+
+    studentDestruct(s1);
+    studentDestruct(s2);
+    studentDestruct(s3);
+    free(students);
 
     fclose(fptr);
 }
@@ -139,6 +153,11 @@ void testSortByName(){
         printf("%s\n", sortedByName[i]->name);
     }
 
+    studentDestruct(s1);
+    studentDestruct(s2);
+    studentDestruct(s3);
+    free(students);
+
     fclose(fptr);
 }
 
@@ -171,6 +190,11 @@ void testSortByID(){
         printf("%d\n", sortedByID[i]->ID);
     }
 
+    studentDestruct(s1);
+    studentDestruct(s2);
+    studentDestruct(s3);
+    free(students);
+
     fclose(fptr);
 }
 
@@ -202,6 +226,11 @@ void testSortByGPA(){
     for(int i = 0; i<3; i++){
         printf("%.2f\n", sortedByGPA[i]->gpa);
     }
+
+    studentDestruct(s1);
+    studentDestruct(s2);
+    studentDestruct(s3);
+    free(students);
 
     fclose(fptr);
 }

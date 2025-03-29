@@ -3,7 +3,7 @@
 #include <string.h>
 #include "student.h"
 
-int addStudentToCSV(FILE * file, Student *s, int lastStudent) {
+void addStudentToCSV(FILE * file, Student *s, int lastStudent) {
 
 	char first[50];
 	char last[50];
@@ -48,12 +48,10 @@ int addStudentToCSV(FILE * file, Student *s, int lastStudent) {
 		}
 
 	}
-
-	return 0;
 	
 }	
 
-int writeAllStudentsToCSV(FILE * file, Student * * students, int count){
+void writeAllStudentsToCSV(FILE * file, Student * * students, int count){
 
 	int lastStudent = 0;
 
@@ -63,15 +61,10 @@ int writeAllStudentsToCSV(FILE * file, Student * * students, int count){
 			lastStudent = 1;
 		}
 
-		if(addStudentToCSV(file, students[i], lastStudent) == 1){
-			fclose(file);
-			return 1;
-		}
+		addStudentToCSV(file, students[i], lastStudent);
 	}
 
 	fclose(file);
-	return 0;
-
 }
 
 
