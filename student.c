@@ -18,10 +18,21 @@ char * joinStrings(const char * s1, const char * s2){
 
 Student * studentConstruct(int ID, const char * first, const char * last){
 	Student * s = malloc(sizeof(Student));
+
+	if(s == NULL){
+		return NULL;
+	}
+
 	s->ID = ID;
 	s->name = joinStrings(first, last);
+
+	if(s->name == NULL){
+		return NULL;
+	}
+
 	s->gpa = 0;
 	s->numGrades = 0;
+	s->next = NULL;
 	return s;
 }
 
@@ -30,6 +41,40 @@ void studentDestruct(Student *s){
 	free(s->name);
 	free(s->grades);
 	free(s);
+}
+
+StudentList * studentListConstruct(){
+
+	StudentList * sList = malloc(sizeof(StudentList));
+
+	if(sList == NULL){
+		return NULL;
+	}
+
+	sList->head = NULL;
+	sList->count = 0;
+	return sList;
+
+}
+
+
+
+void studentListDestruct(Student * ptr, StudentList * sList){
+
+	if(ptr == NULL){
+		return;
+	}
+
+	studentListDestruct(ptr->next, sList);
+
+	if(ptr == sList->head){
+		studentDestruct(ptr);
+		free(sList);
+		return;
+	}
+
+	studentDestruct(ptr);
+
 }
 
 
@@ -120,101 +165,150 @@ double calculateGPA(Student * s){
 
 }
 
-Student * * merge(Student * * left, int leftCount, Student * * right, int rightCount, int sortType){
+Student * deepCopyStudent(Student * s){
+	Student * newStudent = malloc(sizeof(Student));
+	if(newStudent == NULL){
+		return NULL;
+	}
 
-	Student * * result = malloc((leftCount + rightCount) * sizeof(Student *));
-	int i = 0;
-	int j = 0;
-	int k = 0;
+	newStudent->ID = s->ID;
+	newStudent->name = strdup(s->name);
+	newStudent->gpa = s->gpa;
+	newStudent->grades = malloc(s->numGrades * sizeof(double));
+	newStudent->numGrades = s->numGrades;
+	newStudent->next = s->next;
+	
+	for(int i = 0; i<s->numGrades; i++){
+		newStudent->grades[i] = s->grades[i];
+	}
 
-	while(i < leftCount && j < rightCount){
+	return newStudent;
 
-		if (sortType == 0){ //gpa
+}
 
-			if (left[i]->gpa >= right[j]->gpa){
-				result[k] = left[i];
-				i++;
-				k++;
+StudentList * merge(StudentList * left, StudentList * right, int sortType){
+
+	StudentList * result = studentListConstruct();
+
+	Student * lptr = left->head;
+	Student * rptr = right->head;
+	Student * resultTail;
+
+	while(lptr != NULL && rptr != NULL){
+
+		//if left if the one to add
+		if ((sortType == 0 && lptr->gpa >= rptr->gpa) || (sortType == 1 && lptr->ID <= rptr->ID) || (sortType == 2 && strcmp(lptr->name, rptr->name) <= 0)){
+
+			if(result->head == NULL){
+				result->head = lptr;
+				resultTail = lptr;
 			}else{
-				result[k] = right[j];
-				j++;
-				k++;
+				resultTail->next = lptr;
+				resultTail = lptr;
 			}
+			lptr = lptr->next;
+			result->count += 1;
 
-		}else if(sortType == 1){ //ID
-
-			if (left[i]->ID <= right[j]->ID){
-				result[k] = left[i];
-				i++;
-				k++;
+		}else{ //right is the one to add
+				
+			if(result->head == NULL){
+				result->head = rptr;
+				resultTail = rptr;
 			}else{
-				result[k] = right[j];
-				j++;
-				k++;
+				resultTail->next = rptr;
+				resultTail = rptr;
 			}
-
-		}else{ //Name
-
-			if (strcmp(left[i]->name, right[j]->name) <= 0){
-				result[k] = left[i];
-				i++;
-				k++;
-			}else{
-				result[k] = right[j];
-				j++;
-				k++;
-			}
+			rptr = rptr->next;
+			result->count += 1;
 
 		}
 
 	}
 
-	while(i < leftCount){
+	while(lptr != NULL){
 
-		result[k] = left[i];
-		i++;
-		k++;
+		if(result->head == NULL){
+			result->head = lptr;
+			resultTail = lptr;
+		}else{
+			resultTail->next = lptr;
+			resultTail = lptr;
+		}
+		lptr = lptr->next;
+		result->count += 1;
+
+	}
+
+	while(rptr != NULL){
+
+		if(result->head == NULL){
+			result->head = rptr;
+			resultTail = rptr;
+		}else{
+			resultTail->next = rptr;
+			resultTail = rptr;
+		}
+		rptr = rptr->next;
+		result->count += 1;
 
 	}
 
-	while(j < rightCount){
-
-		result[k] = right[j];
-		j++;
-		k++;
-
-	}
+	resultTail->next = NULL;
 
 	return result;
 
 }
 
-Student * * merge_sort(Student * * students, int count, int sortType){ //sortType 0 = sort by GPA, 1 = sort by ID, 2 = sort by name
+StudentList * merge_sort(StudentList * students, int sortType){ //sortType 0 = sort by GPA, 1 = sort by ID, 2 = sort by name
 
-	if (count <= 1){
+	if (students->count <= 1){
 		return students;
 	}
 
-	int middle = count/2;
+	int middle = students->count/2;
 
-	int leftCount = middle;
-	Student * * left = malloc(leftCount * sizeof(Student *));
-	
-	int rightCount = count-middle;
-	Student * * right = malloc(rightCount * sizeof(Student *));
+	StudentList * left = studentListConstruct();
+	StudentList * right = studentListConstruct();
 
-	for (int i = 0; i<leftCount; i++){
-		left[i] = students[i];
+	Student * leftTail;
+	Student * rightTail;
+
+	Student * sptr = students->head;
+	int count = 0;
+
+	while(count < middle){
+		if(left->head == NULL){
+			left->head = deepCopyStudent(sptr);
+			leftTail = left->head;
+		}else{
+			leftTail->next = deepCopyStudent(sptr);
+			leftTail = leftTail->next;
+		}
+		left->count += 1;
+		sptr = sptr->next;
+		count++;
 	}
 
-	for (int i = leftCount; i<count; i++){
-		right[i-leftCount] = students[i];
+	while(sptr != NULL){
+		if(right->head == NULL){
+			right->head = deepCopyStudent(sptr);
+			rightTail = right->head;
+		}else{
+			rightTail->next = deepCopyStudent(sptr);
+			rightTail = rightTail->next;
+		}
+		right->count += 1;
+		sptr = sptr->next;
+		count++;
 	}
 
-	left = merge_sort(left, leftCount, sortType);
-	right = merge_sort(right, rightCount, sortType);
+	leftTail->next = NULL;
+	rightTail->next = NULL;
 
-	Student * * merged = merge(left, leftCount, right, rightCount, sortType);
+	left = merge_sort(left, sortType);
+	right = merge_sort(right, sortType);
+
+	StudentList * merged = merge(left, right, sortType);
 
 	free(left);
 	free(right);
@@ -223,20 +317,20 @@ Student * * merge_sort(Student * * students, int count, int sortType){ //sortTyp
 
 }
 
-Student * * sortByGPA(Student * * students, int count){
+StudentList * sortByGPA(StudentList * students){
 	
-	return merge_sort(students, count, 0);
+	return merge_sort(students, 0);
 
 }
 
-Student * * sortByID(Student * * students, int count){
+StudentList * sortByID(StudentList * students){
 	
-	return merge_sort(students, count, 1);
+	return merge_sort(students, 1);
 
 }
 
-Student * * sortByName(Student * * students, int count){
+StudentList * sortByName(StudentList * students){
 	
-	return merge_sort(students, count, 2);
+	return merge_sort(students, 2);
 
 }

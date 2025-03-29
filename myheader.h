@@ -4,9 +4,9 @@
 #include <stdio.h>
 
 Student * createStudentFromCSVLine(FILE * file);
-Student * * readAllStudentsFromCSV(int * count);
+StudentList * readAllStudentsFromCSV();
 void addStudentToCSV(FILE * file, Student *s, int lastStudent);
-void writeAllStudentsToCSV(FILE * file, Student * * students, int count);
+void writeAllStudentsToCSV(FILE * file, StudentList * sList);
 void testReadCSV();
 void testWriteCSV();
 void testCalculateGPA();

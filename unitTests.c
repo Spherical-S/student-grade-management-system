@@ -13,7 +13,7 @@ void testReadCSV(){
         return;
     }
 
-    Student * * students = malloc(3 * sizeof(Student *));
+    StudentList * students = studentListConstruct();
 
     Student * s1;
     Student * s2;
@@ -23,18 +23,16 @@ void testReadCSV(){
     s2 = createStudentFromCSVLine(fptr);
     s3 = createStudentFromCSVLine(fptr);
 
-    students[0] = s1;
-    students[1] = s2;
-    students[2] = s3;
+    students->head = s1;
+    s1->next = s2;
+    s2->next = s3;
+    students->count = 3;
 
-    for(int i = 0; i<3; i++){
-        printf("%d %s\n", students[i]->ID, students[i]->name);
-    }
+    printf("%d %s\n", s1->ID, s1->name);
+    printf("%d %s\n", s2->ID, s2->name);
+    printf("%d %s\n", s3->ID, s3->name);
 
-    studentDestruct(s1);
-    studentDestruct(s2);
-    studentDestruct(s3);
-    free(students);
+    studentListDestruct(s1, students);
 
     fclose(fptr);
 }
@@ -49,21 +47,23 @@ void testWriteCSV(){
         return;
     }
 
-    Student * * students = malloc(2 * sizeof(Student *));
+    StudentList * students = studentListConstruct();
 
     Student * s1;
     Student * s2;
 
     s1 = studentConstruct(123456, "First", "Last");
     s2 = studentConstruct(654321, "Jane", "Doe");
+
     addGrade(s1, 56.762);
     addGrade(s1, 77);
     addGrade(s2, 100);
 
-    students[0] = s1;
-    students[1] = s2;
+    students->head = s1;
+    s1->next = s2;
+    students->count = 2;
 
-    writeAllStudentsToCSV(fptr, students, 2);
+    writeAllStudentsToCSV(fptr, students);
 
     fclose(fptr);
 
@@ -81,9 +81,7 @@ void testWriteCSV(){
         c = fgetc(fptr2);
     }
 
-    studentDestruct(s1);
-    studentDestruct(s2);
-    free(students);
+    studentListDestruct(s1, students);
 
     fclose(fptr2);
     
@@ -98,7 +96,7 @@ void testCalculateGPA(){
         return;
     }
 
-    Student * * students = malloc(3 * sizeof(Student *));
+    StudentList * students = studentListConstruct();
 
     Student * s1;
     Student * s2;
@@ -108,18 +106,16 @@ void testCalculateGPA(){
     s2 = createStudentFromCSVLine(fptr);
     s3 = createStudentFromCSVLine(fptr);
 
-    students[0] = s1;
-    students[1] = s2;
-    students[2] = s3;
+    students->head = s1;
+    s1->next = s2;
+    s2->next = s3;
+    students->count = 3;
 
-    for(int i = 0; i<3; i++){
-        printf("%.2f\n", students[i]->gpa);
-    }
+    printf("%.2f\n", s1->gpa);
+    printf("%.2f\n", s2->gpa);
+    printf("%.2f\n", s3->gpa);
 
-    studentDestruct(s1);
-    studentDestruct(s2);
-    studentDestruct(s3);
-    free(students);
+    studentListDestruct(s1, students);
 
     fclose(fptr);
 }
@@ -133,7 +129,7 @@ void testSortByName(){
         return;
     }
 
-    Student * * students = malloc(3 * sizeof(Student *));
+    StudentList * students = studentListConstruct();
 
     Student * s1;
     Student * s2;
@@ -143,20 +139,21 @@ void testSortByName(){
     s2 = createStudentFromCSVLine(fptr);
     s3 = createStudentFromCSVLine(fptr);
 
-    students[0] = s1;
-    students[1] = s2;
-    students[2] = s3;
+    students->head = s1;
+    s1->next = s2;
+    s2->next = s3;
+    students->count = 3;
 
-    Student * * sortedByName = sortByName(students, 3);
+    StudentList * sortedByName = sortByName(students);
 
-    for(int i = 0; i<3; i++){
-        printf("%s\n", sortedByName[i]->name);
+    Student * sptr = sortedByName->head;
+
+    while(sptr != NULL){
+        printf("%s\n", sptr->name);
+        sptr = sptr->next;
     }
 
-    studentDestruct(s1);
-    studentDestruct(s2);
-    studentDestruct(s3);
-    free(students);
+    studentListDestruct(s1, students);
 
     fclose(fptr);
 }
@@ -170,7 +167,7 @@ void testSortByID(){
         return;
     }
 
-    Student * * students = malloc(3 * sizeof(Student *));
+    StudentList * students = studentListConstruct();
 
     Student * s1;
     Student * s2;
@@ -180,20 +177,21 @@ void testSortByID(){
     s2 = createStudentFromCSVLine(fptr);
     s3 = createStudentFromCSVLine(fptr);
 
-    students[0] = s1;
-    students[1] = s2;
-    students[2] = s3;
+    students->head = s1;
+    s1->next = s2;
+    s2->next = s3;
+    students->count = 3;
 
-    Student * * sortedByID = sortByID(students, 3);
+    StudentList * sortedByID = sortByID(students);
 
-    for(int i = 0; i<3; i++){
-        printf("%d\n", sortedByID[i]->ID);
+    Student * sptr = sortedByID->head;
+
+    while(sptr != NULL){
+        printf("%d\n", sptr->ID);
+        sptr = sptr->next;
     }
 
-    studentDestruct(s1);
-    studentDestruct(s2);
-    studentDestruct(s3);
-    free(students);
+    studentListDestruct(s1, students);
 
     fclose(fptr);
 }
@@ -207,7 +205,7 @@ void testSortByGPA(){
         return;
     }
 
-    Student * * students = malloc(3 * sizeof(Student *));
+    StudentList * students = studentListConstruct();
 
     Student * s1;
     Student * s2;
@@ -217,20 +215,21 @@ void testSortByGPA(){
     s2 = createStudentFromCSVLine(fptr);
     s3 = createStudentFromCSVLine(fptr);
 
-    students[0] = s1;
-    students[1] = s2;
-    students[2] = s3;
+    students->head = s1;
+    s1->next = s2;
+    s2->next = s3;
+    students->count = 3;
 
-    Student * * sortedByGPA = sortByGPA(students, 3);
+    StudentList * sortedByGPA = sortByGPA(students);
 
-    for(int i = 0; i<3; i++){
-        printf("%.2f\n", sortedByGPA[i]->gpa);
+    Student * sptr = sortedByGPA->head;
+
+    while(sptr != NULL){
+        printf("%.2f\n", sptr->gpa);
+        sptr = sptr->next;
     }
 
-    studentDestruct(s1);
-    studentDestruct(s2);
-    studentDestruct(s3);
-    free(students);
+    studentListDestruct(s1, students);
 
     fclose(fptr);
 }

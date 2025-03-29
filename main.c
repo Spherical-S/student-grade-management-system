@@ -45,8 +45,7 @@ int main(int argc, char * * argv){
     }
     
     //menu option 
-    int numStudents = 0;
-    Student * * students = readAllStudentsFromCSV(&numStudents);
+    StudentList * students = readAllStudentsFromCSV();
 
     if (students == NULL) {
         printf("Error allocating memory!\n");
@@ -55,6 +54,7 @@ int main(int argc, char * * argv){
     
     int choiceMain;
     int exitSelected = 0;
+    Student * sptr;
     while (exitSelected == 0) {
         printf("Welcome to the Student Grade Management System\n\n");
         printf("Click 1 to add a new student.\n");
@@ -79,6 +79,11 @@ int main(int argc, char * * argv){
 
                 Student * addNewStudent = studentConstruct(ID, first, last);
 
+                if(addNewStudent == NULL){
+                    exitSelected = 1;
+                    break;
+                }
+
                 int numGrades;
                 printf("How many grades does the student have? ");
                 scanf("%d", &numGrades);
@@ -98,24 +103,18 @@ int main(int argc, char * * argv){
                     break;
                 }
 
-                students = realloc(students, (numStudents + 1) * sizeof(Student *));
-
-                if (students == NULL) {
-                    printf("Error reallocating memory!\n");
-                    return EXIT_FAILURE;
-                }
-
-                students[numStudents] = addNewStudent;
-                numStudents++;
+                addNewStudent->next = students->head;
+                students->head = addNewStudent;
 
                 FILE * fptr = fopen("StudentData.csv", "w");
 
                 if(fptr == NULL){
                     printf("Error opening file.\n");
-                    return EXIT_FAILURE;
+                    exitSelected = 1;
+                    break;
                 }
 
-                writeAllStudentsToCSV(fptr, students, numStudents);
+                writeAllStudentsToCSV(fptr, students);
                 
                 printf("Student added successfully!\n");
                 break;
@@ -123,9 +122,13 @@ int main(int argc, char * * argv){
             case 2: //display all students
 
                 printf("\nAll Students' Details:\n");
-                for (int i = 0; i < numStudents; i++) {
-                    displayStudent(students[i]);
+
+                sptr = students->head;
+                while(sptr != NULL){
+                    displayStudent(sptr);
+                    sptr = sptr->next;
                 }
+
                 break;
             
             case 3: //search for a specific student
@@ -138,6 +141,7 @@ int main(int argc, char * * argv){
                 scanf("%d", &searchChoice);
 
                 int found = 0;
+                sptr = students->head;
             
                 switch (searchChoice) {
                     case 1: // Search by ID
@@ -145,14 +149,15 @@ int main(int argc, char * * argv){
                         printf("Enter the student's ID: ");
                         scanf("%d", &searchStudentID);
             
-                        for (int i = 0; i < numStudents; i++) {
-                            if (students[i]->ID == searchStudentID) {
-                                displayStudent(students[i]);
+                        while (sptr != NULL) {
+                            if (sptr->ID == searchStudentID) {
+                                displayStudent(sptr);
                                 printf("\nGrade Bar Chart:\n");
-                                printBarChart(students[i]);
+                                printBarChart(sptr);
                                 found = 1;
                                 break;
                             }
+                            sptr = sptr->next;
                         }
             
                         if (found == 0) {
@@ -170,14 +175,15 @@ int main(int argc, char * * argv){
 
                         char * searchFullName = joinStrings(searchFirst, searchLast);
             
-                        for (int i = 0; i < numStudents; i++) {
-                            if (strcmp(students[i]->name, searchFullName) == 0) {
-                                displayStudent(students[i]);
+                        while (sptr != NULL) {
+                            if (strcmp(sptr->name, searchFullName) == 0) {
+                                displayStudent(sptr);
                                 printf("\nGrade Bar Chart:\n");
-                                printBarChart(students[i]);
+                                printBarChart(sptr);
                                 found = 1;
                                 break;
                             }
+                            sptr = sptr->next;
                         }
             
                         if (found == 0) {
@@ -194,7 +200,7 @@ int main(int argc, char * * argv){
                 break;
             case 4: //sort students
                 int choice;
-                Student * * sortedStudents;
+                StudentList * sortedStudents;
                 
                 printf("How do you want to sort the students?\n");
                 printf("1. By GPA\n");
@@ -205,23 +211,25 @@ int main(int argc, char * * argv){
 
                 switch (choice) {
                     case 1:
-                        sortedStudents = sortByGPA(students, numStudents);
+                        sortedStudents = sortByGPA(students);
                         printf("Students sorted by GPA:\n");
                         break;
                     case 2:
-                        sortedStudents = sortByID(students, numStudents);
+                        sortedStudents = sortByID(students);
                         printf("Students sorted by ID:\n");
                         break;
                     case 3:
-                        sortedStudents = sortByName(students, numStudents);
+                        sortedStudents = sortByName(students);
                         printf("Students sorted by Name:\n");
                         break;
                     default:
                         printf("Invalid choice.\n");
                 }
 
-                for(int i = 0; i<numStudents; i++){
-                    displayStudent(sortedStudents[i]);
+                sptr = sortedStudents->head;
+                while(sptr != NULL){
+                    displayStudent(sptr);
+                    sptr = sptr->next;
                 }
 
                 free(sortedStudents);
@@ -240,9 +248,6 @@ int main(int argc, char * * argv){
 
     }
 
-    for(int i = 0; i<numStudents; i++){
-        studentDestruct(students[i]);
-    }
-    free(students);
+    studentListDestruct(students->head, students);
 
 }

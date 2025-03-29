@@ -51,17 +51,21 @@ void addStudentToCSV(FILE * file, Student *s, int lastStudent) {
 	
 }	
 
-void writeAllStudentsToCSV(FILE * file, Student * * students, int count){
+void writeAllStudentsToCSV(FILE * file, StudentList * sList){
 
 	int lastStudent = 0;
 
-	for(int i = 0; i<count; i++){
+	Student * sptr = sList->head;
 
-		if(i == count-1){
+	while(sptr != NULL){
+
+		if(sptr->next == NULL){
 			lastStudent = 1;
 		}
 
-		addStudentToCSV(file, students[i], lastStudent);
+		addStudentToCSV(file, sptr, lastStudent);
+		
+		sptr = sptr->next;
 	}
 
 	fclose(file);
@@ -77,6 +81,10 @@ Student * createStudentFromCSVLine(FILE * file) {
 	fscanf(file, "%d,%100[^,],%100[^,],", &ID, first, last);
 
 	Student * s = studentConstruct(ID, first, last);
+
+	if(s == NULL){
+		return NULL;
+	}
 
 	fscanf(file, "%lf,", &s->gpa);
 
@@ -103,7 +111,7 @@ Student * createStudentFromCSVLine(FILE * file) {
 	return s;
 }
 
-Student * * readAllStudentsFromCSV(int * count) {
+StudentList * readAllStudentsFromCSV() {
 
     FILE * fptr = fopen("StudentData.csv", "r");
 
@@ -112,19 +120,27 @@ Student * * readAllStudentsFromCSV(int * count) {
         return NULL;
     }
 
-    Student * * students = malloc(0);
-    *count = 0;
+	StudentList * sList = studentListConstruct();
+
+	if(sList == NULL){
+		return NULL;
+	}
 
     while (!feof(fptr)) {
 
         Student * newStudent = createStudentFromCSVLine(fptr);
 
-        students = realloc(students, (*count + 1) * sizeof(Student *));
-        students[*count] = newStudent;
-        *count = *count + 1;
+		if(newStudent == NULL){
+			studentListDestruct(sList->head, sList);
+			return NULL;
+		}
+
+		newStudent->next = sList->head;
+		sList->head = newStudent;
+		sList->count += 1;
 
     }
 
     fclose(fptr);
-    return students;
+    return sList;
 }
