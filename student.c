@@ -5,6 +5,11 @@
 
 //Helper method to combine first and last name into one variable
 char * joinStrings(const char * s1, const char * s2){
+
+	if (s1 == NULL || s2 == NULL){
+        return NULL;
+    }
+
 	char * result = malloc((strlen(s1) + strlen(s2) + 2) * sizeof(char));
 	if(result == NULL){
 		printf("Error allocating memory!");
