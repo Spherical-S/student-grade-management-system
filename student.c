@@ -59,21 +59,19 @@ StudentList * studentListConstruct(){
 
 
 
-void studentListDestruct(Student * ptr, StudentList * sList){
+void studentListDestruct(Student *ptr, StudentList *sList){
+	
+    if (ptr == NULL){
+        return;
+    }
 
-	if(ptr == NULL){
-		return;
-	}
+    studentListDestruct(ptr->next, sList);
 
-	studentListDestruct(ptr->next, sList);
+    studentDestruct(ptr);
 
-	if(ptr == sList->head){
-		studentDestruct(ptr);
-		free(sList);
-		return;
-	}
-
-	studentDestruct(ptr);
+    if (ptr == sList->head){
+        free(sList);
+    }
 
 }
 

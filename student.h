@@ -31,5 +31,4 @@ StudentList * sortByID(StudentList * students);
 StudentList * studentListConstruct();
 void studentListDestruct(Student * ptr, StudentList * sList);
 
-StudentList * merge_sort(StudentList * students, int sortType);
 #endif
