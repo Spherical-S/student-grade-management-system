@@ -5,8 +5,8 @@
 
 void addStudentToCSV(FILE * file, Student *s, int lastStudent) {
 
-	char first[50];
-	char last[50];
+	char first[50] = "";
+	char last[50] "";
 	char * dupeName = strdup(s->name);
 
 	//Split the name into first and last name
