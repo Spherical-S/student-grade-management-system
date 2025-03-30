@@ -125,12 +125,7 @@ int main(int argc, char * * argv){
                 printf("\nAll Students' Details:\n");
 
                 sptr = students->head;
-                /*while(sptr != NULL){
-                    displayStudent(sptr);
-                    sptr = sptr->next;
-                }*/
-
-                for(int i = 0; i<students->count; i++){
+                while(sptr != NULL){
                     displayStudent(sptr);
                     sptr = sptr->next;
                 }

@@ -10,6 +10,7 @@ char * joinStrings(const char * s1, const char * s2){
 		printf("Error allocating memory!");
 		return NULL;
 	}
+	result[0] = '\0';
 	strcpy(result, s1);
 	strcat(result, " ");
 	strcat(result, s2);
@@ -60,7 +61,7 @@ StudentList * studentListConstruct(){
 
 
 void studentListDestruct(Student *ptr, StudentList *sList){
-	
+
     if (ptr == NULL){
         return;
     }
