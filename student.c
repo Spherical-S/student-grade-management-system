@@ -315,8 +315,8 @@ StudentList * merge_sort(StudentList * students, int sortType){ //sortType 0 = s
 	StudentList * merged = merge(left, right, sortType);
 	
 	studentListDestruct(students->head, students);
-	//free(left);
-	//free(right);
+	free(left);
+	free(right);
 	
 	return merged;
 
