@@ -68,8 +68,8 @@ int main(int argc, char * * argv){
         switch (choiceMain) {
             case 1: //Add a new student
                 int ID;
-                char first[50];
-                char last[50];
+                char first[50] = "";
+                char last[50] = "";
                 printf("Enter the student's ID: ");
                 scanf("%d", &ID);
                 printf("Enter the student's first name: ");
@@ -105,6 +105,7 @@ int main(int argc, char * * argv){
 
                 addNewStudent->next = students->head;
                 students->head = addNewStudent;
+                students->count += 1;
 
                 FILE * fptr = fopen("StudentData.csv", "w");
 
@@ -124,7 +125,12 @@ int main(int argc, char * * argv){
                 printf("\nAll Students' Details:\n");
 
                 sptr = students->head;
-                while(sptr != NULL){
+                /*while(sptr != NULL){
+                    displayStudent(sptr);
+                    sptr = sptr->next;
+                }*/
+
+                for(int i = 0; i<students->count; i++){
                     displayStudent(sptr);
                     sptr = sptr->next;
                 }
