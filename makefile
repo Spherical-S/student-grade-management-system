@@ -27,7 +27,7 @@ test:
 		fi; \
 	done
 
-memory: $(VALGRIND) ./prog1
+memory: $(VALGRIND) ./$(TARGET)
 	grep "ERROR" vallog
 
 .c.o:
