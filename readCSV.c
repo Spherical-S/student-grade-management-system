@@ -10,7 +10,7 @@ void addStudentToCSV(FILE * file, Student *s, int lastStudent) {
 	char * dupeName = strdup(s->name);
 
 	//Split the name into first and last name
-	char *token = strtok(dupeName, " ");
+	char * token = strtok(dupeName, " ");
     if (token != NULL) {
         strcpy(first, token);
 
@@ -21,6 +21,7 @@ void addStudentToCSV(FILE * file, Student *s, int lastStudent) {
     }
 
 	free(dupeName);
+	free(token);
 
     //FORMAT: ID,FirstName,LastName,GPA,Grade1,Grade2,...,GradeN
     fprintf(file, "%d,%s,%s,", s->ID, first, last);
