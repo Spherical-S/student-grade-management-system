@@ -233,7 +233,7 @@ int main(int argc, char * * argv){
                     sptr = sptr->next;
                 }
 
-                free(sortedStudents);
+                studentListDestruct(sortedStudents->head, sortedStudents);
 
                 break;
             
