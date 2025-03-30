@@ -309,6 +309,8 @@ StudentList * merge_sort(StudentList * students, int sortType){ //sortType 0 = s
 	leftTail->next = NULL;
 	rightTail->next = NULL;
 
+	studentListDestruct(students->head, students);
+
 	left = merge_sort(left, sortType);
 	right = merge_sort(right, sortType);
 
@@ -322,19 +324,73 @@ StudentList * merge_sort(StudentList * students, int sortType){ //sortType 0 = s
 }
 
 StudentList * sortByGPA(StudentList * students){
+
+	StudentList * sList = studentListConstruct();
+	Student * sptr = students->head;
+	Student * tail = NULL;
+
+	while(sptr != NULL){
+		if(sList->head == NULL){
+			sList->head = deepCopyStudent(sptr);
+			tail = sList->head;
+			tail->next = NULL;
+		}else{
+			tail->next = deepCopyStudent(sptr);
+			tail = tail->next;
+			tail->next = NULL;
+		}
+		sptr = sptr->next;
+		sList->count += 1;
+	}
 	
-	return merge_sort(students, 0);
+	return merge_sort(sList, 0);
 
 }
 
 StudentList * sortByID(StudentList * students){
+
+	StudentList * sList = studentListConstruct();
+	Student * sptr = students->head;
+	Student * tail = NULL;
+
+	while(sptr != NULL){
+		if(sList->head == NULL){
+			sList->head = deepCopyStudent(sptr);
+			tail = sList->head;
+			tail->next = NULL;
+		}else{
+			tail->next = deepCopyStudent(sptr);
+			tail = tail->next;
+			tail->next = NULL;
+		}
+		sptr = sptr->next;
+		sList->count += 1;
+	}
 	
-	return merge_sort(students, 1);
+	return merge_sort(sList, 1);
 
 }
 
 StudentList * sortByName(StudentList * students){
+
+	StudentList * sList = studentListConstruct();
+	Student * sptr = students->head;
+	Student * tail = NULL;
+
+	while(sptr != NULL){
+		if(sList->head == NULL){
+			sList->head = deepCopyStudent(sptr);
+			tail = sList->head;
+			tail->next = NULL;
+		}else{
+			tail->next = deepCopyStudent(sptr);
+			tail = tail->next;
+			tail->next = NULL;
+		}
+		sptr = sptr->next;
+		sList->count += 1;
+	}
 	
-	return merge_sort(students, 2);
+	return merge_sort(sList, 2);
 
 }
