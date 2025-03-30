@@ -309,13 +309,12 @@ StudentList * merge_sort(StudentList * students, int sortType){ //sortType 0 = s
 	leftTail->next = NULL;
 	rightTail->next = NULL;
 
-	studentListDestruct(students->head, students);
-
 	left = merge_sort(left, sortType);
 	right = merge_sort(right, sortType);
 
 	StudentList * merged = merge(left, right, sortType);
-
+	
+	studentListDestruct(students->head, students);
 	free(left);
 	free(right);
 	
