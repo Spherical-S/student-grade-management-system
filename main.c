@@ -166,8 +166,8 @@ int main(int argc, char * * argv){
                         break;
 
                     case 2: // Search by name
-                        char searchFirst[50];
-                        char searchLast[50];
+                        char searchFirst[50] = "";
+                        char searchLast[50] = "";
                         printf("Enter the student's first name: ");
                         scanf("%s", searchFirst);
                         printf("Enter the student's last name: ");
