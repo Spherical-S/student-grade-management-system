@@ -103,6 +103,22 @@ int main(int argc, char * * argv){
                     break;
                 }
 
+                sptr = students->head;
+                int validID = 1;
+
+                while(sptr != NULL){
+                    if(sptr->ID == ID){
+                        printf("Student with ID: %d already exists!\n", ID);
+                        validID = 0;
+                        break;
+                    }
+                    sptr = sptr->next;
+                }
+
+                if(validID == 0){
+                    break;
+                }
+
                 addNewStudent->next = students->head;
                 students->head = addNewStudent;
                 students->count += 1;
