@@ -51,7 +51,7 @@ int main(int argc, char * * argv){
         printf("Error allocating memory!\n");
         return EXIT_FAILURE;
     }
-    
+
     int choiceMain;
     int exitSelected = 0;
     Student * sptr;

@@ -126,6 +126,14 @@ StudentList * readAllStudentsFromCSV() {
 		return NULL;
 	}
 
+	fgetc(fptr);
+
+	if(feof(fptr)){
+		return sList;
+	}
+
+	fseek(fptr, 0, SEEK_SET);
+
     while (!feof(fptr)) {
 
         Student * newStudent = createStudentFromCSVLine(fptr);
