@@ -92,6 +92,11 @@ int main(int argc, char * * argv){
 
                 for (int i = 0; i < numGrades; i++) {
                     printf("Enter grade %d: ", i + 1);
+                    if(grade > 100 || grade < 0){
+                        printf("Not in the valid range (0-100)\n");
+                        i--;
+                        continue;
+                    }
                     scanf("%lf", &grade);
                     if(addGrade(addNewStudent, grade) == 1){
                         exitSelected = 1;
